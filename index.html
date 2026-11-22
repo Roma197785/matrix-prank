@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#00ff41;font-family:monospace;overflow:hidden}
+canvas{position:fixed;inset:0}
+.box{
+position:relative;
+z-index:2;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:20px;
+text-align:center;
+text-shadow:0 0 12px #00ff41;
+transition:opacity 1s;
+}
+h1{font-size:26px}
+#status{font-size:17px;line-height:2}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<div class="box">
+<h1 id="title">SYSTEM ACCESS</h1>
+<div id="status">INITIALIZING...<br>CONNECTING...</div>
+</div>
+
+<script>
+const c=document.getElementById('matrix');
+const ctx=c.getContext('2d');
+let w,h,cols,drops;
+
+function resize(){
+w=c.width=innerWidth;
+h=c.height=innerHeight;
+cols=Math.floor(w/16);
+drops=Array(cols).fill(1);
+}
+resize();
+window.onresize=resize;
+
+function draw(){
+ctx.fillStyle='rgba(0,0,0,0.08)';
+ctx.fillRect(0,0,w,h);
+ctx.fillStyle='#00ff41';
+ctx.font='16px monospace';
+
+for(let i=0;i<drops.length;i++){
+ctx.fillText(Math.random()>0.5?'1':'0',i*16,drops[i]*16);
+if(drops[i]*16>h&&Math.random()>0.975)drops[i]=0;
+drops[i]++;
+}
+requestAnimationFrame(draw);
+}
+draw();
+
+setTimeout(()=>{
+document.getElementById('title').innerHTML='⚠ SYSTEM ALERT ⚠';
+document.getElementById('status').innerHTML=
+'ВАШЕ УСТРОЙСТВО БЫЛО ВЗЛОМАНО.<br><br>'+
+'Обнаружен несанкционированный доступ.<br>'+
+'Ваши данные будут удалены через 1 час.<br><br>'+
+'STATUS: CRITICAL';
+},2000);
+
+setTimeout(()=>{
+document.querySelector('.box').style.opacity='0';
+},10000);
+</script>
+</body>
+</html>
+
+HTML
